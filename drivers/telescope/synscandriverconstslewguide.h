@@ -22,10 +22,13 @@
 #include "indiguiderinterface.h"
 #include "libastro.h"
 
-class SynscanDriver : public INDI::Telescope, public INDI::GuiderInterface
+// duration of constant time guide pulse
+#define CONSTGUIDE_MS (100)
+
+class SynscanDriverConstSlewGuide : public INDI::Telescope, public INDI::GuiderInterface
 {
     public:
-        SynscanDriver();
+        SynscanDriverConstSlewGuide();
 
         typedef enum { SYN_N, SYN_S, SYN_E, SYN_W } SynscanDirection;
 

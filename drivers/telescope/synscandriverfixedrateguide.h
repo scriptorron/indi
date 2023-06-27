@@ -22,10 +22,10 @@
 #include "indiguiderinterface.h"
 #include "libastro.h"
 
-class SynscanDriver : public INDI::Telescope, public INDI::GuiderInterface
+class SynscanDriverFixedRateGuide : public INDI::Telescope, public INDI::GuiderInterface
 {
     public:
-        SynscanDriver();
+        SynscanDriverFixedRateGuide();
 
         typedef enum { SYN_N, SYN_S, SYN_E, SYN_W } SynscanDirection;
 
@@ -109,6 +109,8 @@ class SynscanDriver : public INDI::Telescope, public INDI::GuiderInterface
         // Guiding
         void guideTimeoutCallbackNS();
         void guideTimeoutCallbackWE();
+        bool MoveNS_forGuiding(INDI_DIR_NS dir, TelescopeMotionCommand command);
+        bool MoveWE_forGuiding(INDI_DIR_WE dir, TelescopeMotionCommand command);
 
         /**
          * @brief slewVariableRate Slew using a custom rate

@@ -16,7 +16,7 @@
  Boston, MA 02110-1301, USA.
 *******************************************************************************/
 
-#include "synscandriver.h"
+#include "synscandriverfixedrateguide.h"
 #include "libastro.h"
 #include "connectionplugins/connectioninterface.h"
 #include "connectionplugins/connectiontcp.h"
@@ -35,9 +35,9 @@
 #include <cstring>
 #include <assert.h>
 
-constexpr uint16_t SynscanDriver::SIM_SLEW_RATE[];
+constexpr uint16_t SynscanDriverFixedRateGuide::SIM_SLEW_RATE[];
 
-SynscanDriver::SynscanDriver()
+SynscanDriverFixedRateGuide::SynscanDriverFixedRateGuide()
 {
     setVersion(2, 0);
 
@@ -48,12 +48,12 @@ SynscanDriver::SynscanDriver()
     m_MountInfo.push_back("--");
 }
 
-const char * SynscanDriver::getDefaultName()
+const char * SynscanDriverFixedRateGuide::getDefaultName()
 {
     return "SynScan";
 }
 
-bool SynscanDriver::initProperties()
+bool SynscanDriverFixedRateGuide::initProperties()
 {
     INDI::Telescope::initProperties();
 
@@ -134,7 +134,7 @@ bool SynscanDriver::initProperties()
     return true;
 }
 
-bool SynscanDriver::updateProperties()
+bool SynscanDriverFixedRateGuide::updateProperties()
 {
     INDI::Telescope::updateProperties();
 
@@ -184,7 +184,7 @@ bool SynscanDriver::updateProperties()
     return true;
 }
 
-void SynscanDriver::setupParams()
+void SynscanDriverFixedRateGuide::setupParams()
 {
     readFirmware();
     //readModel();
@@ -194,7 +194,7 @@ void SynscanDriver::setupParams()
     sendTime();
 }
 
-int SynscanDriver::hexStrToInteger(const std::string &res)
+int SynscanDriverFixedRateGuide::hexStrToInteger(const std::string &res)
 {
     int result = 0;
 
@@ -210,7 +210,7 @@ int SynscanDriver::hexStrToInteger(const std::string &res)
     return result;
 }
 
-bool SynscanDriver::Handshake()
+bool SynscanDriverFixedRateGuide::Handshake()
 {
     char res[SYN_RES] = {0};
     if (!echo())
@@ -236,7 +236,7 @@ bool SynscanDriver::Handshake()
     return true;
 }
 
-bool SynscanDriver::ISNewNumber(const char * dev, const char * name, double values[], char * names[], int n)
+bool SynscanDriverFixedRateGuide::ISNewNumber(const char * dev, const char * name, double values[], char * names[], int n)
 {
     if (dev && !strcmp(dev, getDeviceName()))
     {
@@ -313,7 +313,7 @@ bool SynscanDriver::ISNewNumber(const char * dev, const char * name, double valu
     return INDI::Telescope::ISNewNumber(dev, name, values, names, n);
 }
 
-bool SynscanDriver::ISNewSwitch(const char *dev, const char *name, ISState *states, char *names[], int n)
+bool SynscanDriverFixedRateGuide::ISNewSwitch(const char *dev, const char *name, ISState *states, char *names[], int n)
 {
     if (dev && !strcmp(dev, getDeviceName()))
     {
@@ -338,13 +338,13 @@ bool SynscanDriver::ISNewSwitch(const char *dev, const char *name, ISState *stat
     return INDI::Telescope::ISNewSwitch(dev, name, states, names, n);
 }
 
-bool SynscanDriver::echo()
+bool SynscanDriverFixedRateGuide::echo()
 {
     char res[SYN_RES] = {0};
     return sendCommand("Kx", res);
 }
 
-bool SynscanDriver::readFirmware()
+bool SynscanDriverFixedRateGuide::readFirmware()
 {
     // Read the handset version
     char res[SYN_RES] = {0};
@@ -373,7 +373,7 @@ bool SynscanDriver::readFirmware()
     return false;
 }
 
-bool SynscanDriver::readTracking()
+bool SynscanDriverFixedRateGuide::readTracking()
 {
     // Read the handset version
     char res[SYN_RES] = {0};
@@ -412,7 +412,7 @@ bool SynscanDriver::readTracking()
     return false;
 }
 
-bool SynscanDriver::readModel()
+bool SynscanDriverFixedRateGuide::readModel()
 {
     // extended list of mounts
     std::map<int, std::string> models =
@@ -457,7 +457,7 @@ bool SynscanDriver::readModel()
     return true;
 }
 
-bool SynscanDriver::ReadScopeStatus()
+bool SynscanDriverFixedRateGuide::ReadScopeStatus()
 {
     if (isSimulation())
     {
@@ -566,7 +566,7 @@ bool SynscanDriver::ReadScopeStatus()
     return true;
 }
 
-bool SynscanDriver::SetTrackEnabled(bool enabled)
+bool SynscanDriverFixedRateGuide::SetTrackEnabled(bool enabled)
 {
     char cmd[SYN_RES] = {0}, res[SYN_RES] = {0};
 
@@ -578,7 +578,7 @@ bool SynscanDriver::SetTrackEnabled(bool enabled)
     return sendCommand(cmd, res, 2);
 }
 
-bool SynscanDriver::SetTrackMode(uint8_t mode)
+bool SynscanDriverFixedRateGuide::SetTrackMode(uint8_t mode)
 {
     char cmd[SYN_RES] = {0}, res[SYN_RES] = {0};
 
@@ -590,7 +590,7 @@ bool SynscanDriver::SetTrackMode(uint8_t mode)
     return sendCommand(cmd, res);
 }
 
-bool SynscanDriver::SetAltAzMode(bool enable)
+bool SynscanDriverFixedRateGuide::SetAltAzMode(bool enable)
 {
     IUResetSwitch(&GotoModeSP);
 
@@ -620,7 +620,7 @@ bool SynscanDriver::SetAltAzMode(bool enable)
     return true;
 }
 
-bool SynscanDriver::Goto(double ra, double dec)
+bool SynscanDriverFixedRateGuide::Goto(double ra, double dec)
 {
     char cmd[SYN_RES] = {0}, res[SYN_RES] = {0};
 
@@ -673,7 +673,7 @@ bool SynscanDriver::Goto(double ra, double dec)
     return false;
 }
 
-bool SynscanDriver::GotoAzAlt(double az, double alt)
+bool SynscanDriverFixedRateGuide::GotoAzAlt(double az, double alt)
 {
     char cmd[SYN_RES] = {0}, res[SYN_RES] = {0};
 
@@ -709,7 +709,7 @@ bool SynscanDriver::GotoAzAlt(double az, double alt)
     return false;
 }
 
-bool SynscanDriver::Park()
+bool SynscanDriverFixedRateGuide::Park()
 {
     double parkAZ  = GetAxis1Park();
     double parkAlt = GetAxis2Park();
@@ -729,7 +729,7 @@ bool SynscanDriver::Park()
     return false;
 }
 
-bool SynscanDriver::UnPark()
+bool SynscanDriverFixedRateGuide::UnPark()
 {
     SetParked(false);
     SetTrackMode(m_isAltAz ? 1 : 2);
@@ -737,7 +737,7 @@ bool SynscanDriver::UnPark()
     return true;
 }
 
-bool SynscanDriver::SetCurrentPark()
+bool SynscanDriverFixedRateGuide::SetCurrentPark()
 {
     char res[SYN_RES] = {0};
 
@@ -764,7 +764,7 @@ bool SynscanDriver::SetCurrentPark()
     return true;
 }
 
-bool SynscanDriver::SetDefaultPark()
+bool SynscanDriverFixedRateGuide::SetDefaultPark()
 {
     // By default az to north, and alt to pole
     LOG_DEBUG("Setting Park Data to Default.");
@@ -774,7 +774,7 @@ bool SynscanDriver::SetDefaultPark()
     return true;
 }
 
-bool SynscanDriver::Abort()
+bool SynscanDriverFixedRateGuide::Abort()
 {
     if (TrackState == SCOPE_IDLE)
         return true;
@@ -791,7 +791,7 @@ bool SynscanDriver::Abort()
     return true;
 }
 
-bool SynscanDriver::MoveNS(INDI_DIR_NS dir, TelescopeMotionCommand command)
+bool SynscanDriverFixedRateGuide::MoveNS(INDI_DIR_NS dir, TelescopeMotionCommand command)
 {
     if (isSimulation())
         return true;
@@ -848,7 +848,101 @@ bool SynscanDriver::MoveNS(INDI_DIR_NS dir, TelescopeMotionCommand command)
     return true;
 }
 
-bool SynscanDriver::MoveWE(INDI_DIR_WE dir, TelescopeMotionCommand command)
+bool SynscanDriverFixedRateGuide::MoveNS_forGuiding(INDI_DIR_NS dir, TelescopeMotionCommand command)
+{
+    if (isSimulation())
+        return true;
+
+    bool rc = false;
+    SynscanDirection move;
+
+    if (currentPierSide == PIER_WEST)
+        move = (dir == DIRECTION_NORTH) ? SYN_N : SYN_S;
+    else
+        move = (dir == DIRECTION_NORTH) ? SYN_S : SYN_N;
+
+    uint8_t rate = 1;
+
+    switch (command)
+    {
+        case MOTION_START:
+            LOGF_ERROR(
+                "SBR: MoveNS_forGuiding MOTION_START, currentPierSide=%i, dir=%i, move=%i, rate=%i, m_CustomGuideDE=%f\n", 
+                currentPierSide, dir, move, rate, m_CustomGuideDE);
+            rc = slewFixedRate(move, rate);
+            if (!rc)
+            {
+                LOG_ERROR("Error setting N/S motion direction.");
+                return false;
+            }
+            // Only report messages if we are not guiding
+            else if (!m_CustomGuideDE)
+                LOGF_INFO("Moving toward %s.", (move == SYN_N) ? "North" : "South");
+            break;
+
+        case MOTION_STOP:
+            LOGF_ERROR(
+                    "SBR: MoveNS_forGuiding MOTION_STOP, currentPierSide=%i, dir=%i, move=%i\n", 
+                    currentPierSide, dir, move);
+            if (slewFixedRate(move, 0) == false)
+            {
+                LOG_ERROR("Error stopping N/S motion.");
+                return false;
+            }
+            else if (!m_CustomGuideDE)
+                LOGF_INFO("Movement toward %s halted.", (move == SYN_N) ? "North" : "South");
+            break;
+    }
+
+    return true;
+}
+
+bool SynscanDriverFixedRateGuide::MoveWE_forGuiding(INDI_DIR_WE dir, TelescopeMotionCommand command)
+{
+    if (isSimulation())
+        return true;
+
+    bool rc = false;
+    SynscanDirection move = (dir == DIRECTION_WEST) ? SYN_W : SYN_E;
+    uint8_t rate = 1;
+
+
+
+    switch (command)
+    {
+        case MOTION_START:
+            LOGF_ERROR(
+                "SBR: MoveWE_forGuiding MOTION_START, dir=%i, move=%i, rate=%i, m_CustomGuideRA=%f\n", 
+                dir, move, rate, m_CustomGuideRA);
+            rc = slewFixedRate(move, rate);
+            if (!rc)
+            {
+                LOG_ERROR("Error setting W/E motion direction.");
+                return false;
+            }
+            // Only report messages if we are not guiding
+            else if (!m_CustomGuideRA)
+                LOGF_INFO("Moving toward %s.", (move == SYN_W) ? "West" : "East");
+            break;
+
+        case MOTION_STOP:
+            LOGF_ERROR(
+                "SBR: MoveWE_forGuiding MOTION_STOP, dir=%i, move=%i\n", 
+                dir, move);
+            if (slewFixedRate(move, 0) == false)
+            {
+                LOG_ERROR("Error stopping W/E motion.");
+                return false;
+            }
+            else if (!m_CustomGuideRA)
+                LOGF_INFO("Movement toward %s halted.", (move == SYN_W) ? "West" : "East");
+            break;
+    }
+
+    return true;
+}
+
+bool SynscanDriverFixedRateGuide::MoveWE(INDI_DIR_WE dir, TelescopeMotionCommand command)
 {
     if (isSimulation())
         return true;
@@ -899,14 +993,14 @@ bool SynscanDriver::MoveWE(INDI_DIR_WE dir, TelescopeMotionCommand command)
     return true;
 }
 
-bool SynscanDriver::SetSlewRate(int s)
+bool SynscanDriverFixedRateGuide::SetSlewRate(int s)
 {
     m_TargetSlewRate = s + 1;
     return true;
 }
 
 #if 0
-bool SynscanDriver::passThruCommand(int cmd, int target, int msgsize, int data, int numReturn)
+bool SynscanDriverFixedRateGuide::passThruCommand(int cmd, int target, int msgsize, int data, int numReturn)
 {
     char test[20] = {0};
     int bytesRead, bytesWritten;
@@ -956,7 +1050,7 @@ bool SynscanDriver::passThruCommand(int cmd, int target, int msgsize, int data, 
 }
 #endif
 
-bool SynscanDriver::sendTime()
+bool SynscanDriverFixedRateGuide::sendTime()
 {
     LOG_DEBUG("Reading mount time...");
 
@@ -1020,7 +1114,7 @@ bool SynscanDriver::sendTime()
     return false;
 }
 
-bool SynscanDriver::sendLocation()
+bool SynscanDriverFixedRateGuide::sendLocation()
 {
     char res[SYN_RES] = {0};
 
@@ -1083,7 +1177,7 @@ bool SynscanDriver::sendLocation()
     return true;
 }
 
-bool SynscanDriver::updateTime(ln_date * utc, double utc_offset)
+bool SynscanDriverFixedRateGuide::updateTime(ln_date * utc, double utc_offset)
 {
     char cmd[SYN_RES] = {0}, res[SYN_RES] = {0};
 
@@ -1118,7 +1212,7 @@ bool SynscanDriver::updateTime(ln_date * utc, double utc_offset)
     return sendCommand(cmd, res, 9);
 }
 
-bool SynscanDriver::updateLocation(double latitude, double longitude, double elevation)
+bool SynscanDriverFixedRateGuide::updateLocation(double latitude, double longitude, double elevation)
 {
     INDI_UNUSED(elevation);
     char cmd[SYN_RES] = {0}, res[SYN_RES] = {0};
@@ -1168,7 +1262,7 @@ bool SynscanDriver::updateLocation(double latitude, double longitude, double ele
     return sendCommand(cmd, res, 9);
 }
 
-bool SynscanDriver::Sync(double ra, double dec)
+bool SynscanDriverFixedRateGuide::Sync(double ra, double dec)
 {
     char cmd[SYN_RES] = {0}, res[SYN_RES] = {0};
 
@@ -1197,7 +1291,7 @@ bool SynscanDriver::Sync(double ra, double dec)
     return sendCommand(cmd, res, 18);
 }
 
-void SynscanDriver::sendStatus()
+void SynscanDriverFixedRateGuide::sendStatus()
 {
     bool BasicMountInfoHasChanged = false;
 
@@ -1224,7 +1318,7 @@ void SynscanDriver::sendStatus()
     }
 }
 
-bool SynscanDriver::sendCommand(const char * cmd, char * res, int cmd_len, int res_len)
+bool SynscanDriverFixedRateGuide::sendCommand(const char * cmd, char * res, int cmd_len, int res_len)
 {
     int nbytes_written = 0, nbytes_read = 0, rc = -1;
 
@@ -1283,7 +1377,7 @@ bool SynscanDriver::sendCommand(const char * cmd, char * res, int cmd_len, int r
     return true;
 }
 
-void SynscanDriver::hexDump(char * buf, const char * data, int size)
+void SynscanDriverFixedRateGuide::hexDump(char * buf, const char * data, int size)
 {
     for (int i = 0; i < size; i++)
         sprintf(buf + 3 * i, "%02X ", static_cast<uint8_t>(data[i]));
@@ -1292,7 +1386,7 @@ void SynscanDriver::hexDump(char * buf, const char * data, int size)
         buf[3 * size - 1] = '\0';
 }
 
-void SynscanDriver::mountSim()
+void SynscanDriverFixedRateGuide::mountSim()
 {
     static struct timeval ltv;
     struct timeval tv;
@@ -1375,7 +1469,7 @@ void SynscanDriver::mountSim()
     NewRaDec(CurrentRA, CurrentDE);
 }
 
-bool SynscanDriver::slewFixedRate(SynscanDirection direction, uint8_t rate)
+bool SynscanDriverFixedRateGuide::slewFixedRate(SynscanDirection direction, uint8_t rate)
 {
     char cmd[SYN_RES] = {0}, res[SYN_RES] = {0};
 
@@ -1394,7 +1488,7 @@ bool SynscanDriver::slewFixedRate(SynscanDirection direction, uint8_t rate)
     return sendCommand(cmd, res, 8);
 }
 
-bool SynscanDriver::slewVariableRate(SynscanDirection direction, double rate)
+bool SynscanDriverFixedRateGuide::slewVariableRate(SynscanDirection direction, double rate)
 {
     char cmd[SYN_RES] = {0}, res[SYN_RES] = {0};
 
@@ -1416,7 +1510,7 @@ bool SynscanDriver::slewVariableRate(SynscanDirection direction, double rate)
     return sendCommand(cmd, res, 8);
 }
 
-IPState SynscanDriver::GuideNorth(uint32_t ms)
+IPState SynscanDriverFixedRateGuide::GuideNorth(uint32_t ms)
 {
     if (m_GuideNSTID)
     {
@@ -1427,12 +1521,12 @@ IPState SynscanDriver::GuideNorth(uint32_t ms)
     //m_CustomGuideDE = TRACKRATE_SIDEREAL + GuideRateN[AXIS_DE].value * TRACKRATE_SIDEREAL;
     m_CustomGuideDE = GuideRateN[AXIS_DE].value * TRACKRATE_SIDEREAL;
     m_CurrentGuideDirNS = DIRECTION_NORTH;
-    MoveNS(DIRECTION_NORTH, MOTION_START);
+    MoveNS_forGuiding(DIRECTION_NORTH, MOTION_START);
     m_GuideNSTID = IEAddTimer(ms, guideTimeoutHelperNS, this);
     return IPS_BUSY;
 }
 
-IPState SynscanDriver::GuideSouth(uint32_t ms)
+IPState SynscanDriverFixedRateGuide::GuideSouth(uint32_t ms)
 {
     if (m_GuideNSTID)
     {
@@ -1443,12 +1537,12 @@ IPState SynscanDriver::GuideSouth(uint32_t ms)
     //m_CustomGuideDE = TRACKRATE_SIDEREAL + GuideRateN[AXIS_DE].value * TRACKRATE_SIDEREAL;
     m_CustomGuideDE = GuideRateN[AXIS_DE].value * TRACKRATE_SIDEREAL;
     m_CurrentGuideDirNS = DIRECTION_SOUTH;
-    MoveNS(DIRECTION_SOUTH, MOTION_START);
+    MoveNS_forGuiding(DIRECTION_SOUTH, MOTION_START);
     m_GuideNSTID = IEAddTimer(ms, guideTimeoutHelperNS, this);
     return IPS_BUSY;
 }
 
-IPState SynscanDriver::GuideEast(uint32_t ms)
+IPState SynscanDriverFixedRateGuide::GuideEast(uint32_t ms)
 {
     if (m_GuideWETID)
     {
@@ -1463,12 +1557,12 @@ IPState SynscanDriver::GuideEast(uint32_t ms)
     //m_CustomGuideRA = TRACKRATE_SIDEREAL + GuideRateN[AXIS_RA].value * TRACKRATE_SIDEREAL;
     m_CustomGuideRA = GuideRateN[AXIS_RA].value * TRACKRATE_SIDEREAL;
     m_CurrentGuideDirWE = DIRECTION_EAST;
-    MoveWE(DIRECTION_EAST, MOTION_START);
+    MoveWE_forGuiding(DIRECTION_EAST, MOTION_START);
     m_GuideWETID = IEAddTimer(ms, guideTimeoutHelperWE, this);
     return IPS_BUSY;
 }
 
-IPState SynscanDriver::GuideWest(uint32_t ms)
+IPState SynscanDriverFixedRateGuide::GuideWest(uint32_t ms)
 {
     if (m_GuideWETID)
     {
@@ -1481,22 +1575,22 @@ IPState SynscanDriver::GuideWest(uint32_t ms)
     //m_CustomGuideRA = TRACKRATE_SIDEREAL + GuideRateN[AXIS_RA].value * TRACKRATE_SIDEREAL;
     m_CustomGuideRA = GuideRateN[AXIS_RA].value * TRACKRATE_SIDEREAL;
     m_CurrentGuideDirWE = DIRECTION_WEST;
-    MoveWE(DIRECTION_WEST, MOTION_START);
+    MoveWE_forGuiding(DIRECTION_WEST, MOTION_START);
     m_GuideWETID = IEAddTimer(ms, guideTimeoutHelperWE, this);
     return IPS_BUSY;
 }
 
-void SynscanDriver::guideTimeoutHelperNS(void * context)
+void SynscanDriverFixedRateGuide::guideTimeoutHelperNS(void * context)
 {
-    static_cast<SynscanDriver *>(context)->guideTimeoutCallbackNS();
+    static_cast<SynscanDriverFixedRateGuide *>(context)->guideTimeoutCallbackNS();
 }
 
-void SynscanDriver::guideTimeoutHelperWE(void * context)
+void SynscanDriverFixedRateGuide::guideTimeoutHelperWE(void * context)
 {
-    static_cast<SynscanDriver *>(context)->guideTimeoutCallbackWE();
+    static_cast<SynscanDriverFixedRateGuide *>(context)->guideTimeoutCallbackWE();
 }
 
-void SynscanDriver::guideTimeoutCallbackNS()
+void SynscanDriverFixedRateGuide::guideTimeoutCallbackNS()
 {
     INDI_DIR_NS direction = static_cast<INDI_DIR_NS>(IUFindOnSwitchIndex(&MovementNSSP));
     //MoveNS(direction, MOTION_STOP);
@@ -1505,7 +1599,7 @@ void SynscanDriver::guideTimeoutCallbackNS()
     m_CustomGuideDE = m_GuideNSTID = 0;
 }
 
-void SynscanDriver::guideTimeoutCallbackWE()
+void SynscanDriverFixedRateGuide::guideTimeoutCallbackWE()
 {
     INDI_DIR_WE direction = static_cast<INDI_DIR_WE>(IUFindOnSwitchIndex(&MovementWESP));
     //MoveWE(direction, MOTION_STOP);
@@ -1514,7 +1608,7 @@ void SynscanDriver::guideTimeoutCallbackWE()
     m_CustomGuideRA = m_GuideWETID = 0;
 }
 
-bool SynscanDriver::isSlewComplete()
+bool SynscanDriverFixedRateGuide::isSlewComplete()
 {
     char res[SYN_RES] = {0};
 

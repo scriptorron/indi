@@ -175,6 +175,25 @@ target_link_libraries(indi_synscan_telescope indidriver AlignmentDriver)
 
 install(TARGETS indi_synscan_telescope RUNTIME DESTINATION bin)
 
+
+# ########## Syncscan ConstantSlewGuiding ###############
+add_executable(indi_synscanconstslewguide_telescope
+    synscandriverconstslewguide.cpp
+    synscanmountconstslewguide.cpp)
+
+target_link_libraries(indi_synscanconstslewguide_telescope indidriver AlignmentDriver)
+
+install(TARGETS indi_synscanconstslewguide_telescope RUNTIME DESTINATION bin)
+
+# ########## Syncscan ConstantSlewGuiding ###############
+add_executable(indi_synscanfixedrateguide_telescope
+    synscandriverfixedrateguide.cpp
+    synscanmountfixedrateguide.cpp)
+
+target_link_libraries(indi_synscanfixedrateguide_telescope indidriver AlignmentDriver)
+
+install(TARGETS indi_synscanfixedrateguide_telescope RUNTIME DESTINATION bin)
+
 # ########## Syncscan Legacy ###############
 add_executable(indi_synscanlegacy_telescope
     synscandriverlegacy.cpp
